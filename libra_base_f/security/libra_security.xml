@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_no_exigir_campos_producto_vendible" model="res.groups">
+        <field name="name">NO exigir campos obligatorios para hacer producto vendible</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+
+</odoo>

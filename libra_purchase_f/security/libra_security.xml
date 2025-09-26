@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_compras_solo_lectura_ordenes_compra" model="res.groups">
+        <field name="name">Compras - Ordenes de compras solo lectura (con chatter)</field>
+        <field name="category_id" ref="base.module_category_purchase_management"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_stock_omitir_bloqueo_pendiente_facturar" model="res.groups">
+        <field name="name">Omitir bloqueo de entrega por productos sin facturar</field>
+        <field name="category_id" ref="base.module_category_warehouse_management"/>
+    </record>
+
+</odoo>

@@ -12,11 +12,14 @@
     "depends": [
             "sale",
             "sale_management",
+            "stock",
+            "product",
         ],
     "data": [
             'security/libra_sale_security.xml',
             'views/sale_order_views.xml',
             'data/libra_data.xml',
+            'views/product_template_views.xml',            
         ],
     "installable": True,
 }

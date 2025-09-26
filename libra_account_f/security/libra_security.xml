@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_payment_group_to_draft" model="res.groups">
+        <field name="name">Establecer recibo como borrador</field>
+        <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+    </record>
+
+</odoo>

@@ -6,6 +6,24 @@ class SaleOrder(models.Model):
 
     fecha_compromiso_vencida = fields.Boolean(string = 'Fecha de Compromiso Vencida', compute = '_compute_vencida', search = '_search_vencida')
 
+    total_due = fields.Monetary(
+        related='partner_id.total_due',
+        string = 'Saldo'
+    )
+
+    cotizacion = fields.Float(string='Cotización',
+                            compute='_compute_cotizacion', 
+                            store=True,
+                            help='Cotización del dolar en la fecha del presupuesto/pedido.')
+
+    @api.depends('date_order')
+    def _compute_cotizacion(self):
+        for order in self:
+            moneda_origen = self.env.ref('base.USD')
+            moneda_destino = self.env.ref('base.ARS')
+            compania = self.env.user.company_id
+            order.cotizacion = moneda_origen._convert(1,moneda_destino,compania, order.date_order)
+
     def _compute_vencida(self):
         now = fields.Datetime.now()
         # import pdb; pdb.set_trace()
@@ -61,3 +79,18 @@ class SaleOrder(models.Model):
         """Asegurar que sale_order_template_id quede vacío al cambiar partner_id o al crear"""
         if not self.id:  # Solo al crear un nuevo presupuesto
             self.sale_order_template_id = False
+
+    def write(self, values):        
+        for order in self:
+            if self.env.user.has_group('libra_sale_f.group_commitment_date_required'):                
+                if ('state' in values and order.state != 'done' and values['state'] == 'sale'):
+                        if not order.commitment_date:
+                            raise ValidationError(
+                                    'Debe informar la fecha de compromiso'
+                                    )
+
+            if self.env.user.has_group('libra_sale_f.group_ventas_solo_lectura_pedidos'):
+                raise ValidationError("Su usuario solo está habilitado para escribir en el chatter ")
+
+        res = super(SaleOrder, self).write(values)
+
