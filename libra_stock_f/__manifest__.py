@@ -13,11 +13,17 @@
         # CORE ce
         "stock",
         "stock_picking_invoice_link", # OCA
-        "sale_order_type", # OCA        
+        "sale_order_type", # OCA 
+        "stock_voucher",
+        "stock_ux",       
         ],
     "data": [
         'security/libra_security.xml',
         'views/stock_picking_views.xml',
+        'views/report_stockpicking_operations.xml',
+        'views/report_customer_delivery_views.xml',
+        'security/ir.model.access.csv',
+        'wizard/report_customer_delivery_wizard_views.xml',
         ],
     "installable": True,
 }

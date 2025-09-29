@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="purchase_order_form" model="ir.ui.view">
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase_delivery_invoice']/group[1]/group[1]/field[@name='origin']" position="after">
+                <label for="date_planned_reconfirmed"/>
+                <div>
+                    <field name="date_planned_reconfirmed"/>    
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/list//field[@name='price_unit']" position="after">
+                <field name="precio_unitario_con_descuento" readonly="True" force_save="True" optional="hide"/>
+            </xpath>
+            
+            <xpath expr="//field[@name='order_line']/list//field[@name='price_subtotal']" position="after">
+                <field name="qty_available" column_invisible="parent.state in ('purchase', 'done')" optional="show"/>
+                <field name="virtual_available" column_invisible="parent.state in ('purchase', 'done')" optional="show"/>
+                <field name="qty_available_static" column_invisible="parent.state not in ('purchase', 'done')" optional="show"/>
+                <field name="virtual_available_static" column_invisible="parent.state not in ('purchase', 'done')" optional="show"/>
+                <field name="vendor_invoice_price_unit" />
+                <!-- <field name="cost_price_unit" /> -->
+                <field name="sales_count" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

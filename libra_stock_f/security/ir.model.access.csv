@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+libra_stock_f.access_report_customer_delivery,access_report_customer_delivery,libra_stock_f.model_report_customer_delivery,base.group_user,1,1,1,1
+libra_stock_f.access_report_customer_delivery_wizard,access_report_customer_delivery_wizard,libra_stock_f.model_report_customer_delivery_wizard,base.group_user,1,1,1,1

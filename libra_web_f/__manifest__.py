@@ -2,21 +2,19 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Libra",
+    "name": "Libra web f",
     "summary": "",
     "version": "18.0.1.0.0",
     "category": "Stock",
-    "website": "https://github.com/juanpgarza/libra-fusion",
+    "website": "https://github.com/juanpgarza/libra-custom",
     "author": "juanpgarza",
     "license": "AGPL-3",
     "depends": [
-        # CORE ce
-        "purchase",
-        "sale",
+            "website_sale",      
         ],
     "data": [
-        'security/libra_security.xml',
-        "views/purchase_order_views.xml",
+            'views/website_sale_template.xml',
+            'views/product_template.xml',
         ],
     "installable": True,
 }
