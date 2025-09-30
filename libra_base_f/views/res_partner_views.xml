@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_sale_type_form_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="sale_order_type.res_partner_sale_type_form_view"/>
+        <field name="arch" type="xml">
+
+            <field name="sale_type" position="attributes">
+                <attribute name="required">is_customer</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_partner_form_zip_inherit" model="ir.ui.view">
+        <field name="name">res.partner.zip_id.2</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base_location.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <field name="zip_id" position="attributes">
+                <attribute name="required">is_customer and country_id == 10</attribute>
+            </field>
+
+            <field name="country_id" position="attributes">
+                <attribute name="required">is_customer</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!-- <field name="category_id" position="after">
+                <field name="tipo_cliente_id" required="is_customer"/>
+            </field> -->
+
+            <field name="email" position="attributes">
+                <attribute name="required">True</attribute>
+            </field>
+
+            <field name="mobile" position="attributes">
+                <attribute name="required">True</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <!-- <record id="view_partner_tree_inherit" model="ir.ui.view">
+        <field name="name">res.partner.list</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+
+            <field name="phone" position="after">
+                <field name="mobile" />
+            </field>
+
+        </field>
+    </record> -->
+
+        <!-- NO FUNCIONA!! property_product_pricelist NO ES ALMACENADO-->
+    <!-- <record id="view_res_partner_filter_inherit" model="ir.ui.view">
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="property_product_pricelist"/>
+            </field>
+            <group expand="0">
+                <filter name="property_product_pricelist" context="{'group_by':'property_product_pricelist'}"/>
+            </group>
+        </field>
+    </record> -->
+
+    <!-- <record id="view_partner_form_agent_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.agent</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="sale_commission.view_partner_form_agent"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='agent_information']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_manager,sales_team.group_sale_salesman</attribute>
+            </xpath>
+        </field>
+    </record> -->
+
+    <record id="base.action_partner_form" model="ir.actions.act_window">
+        <field name="context">{"search_default_customer":1,"default_sale_type":4,"default_property_payment_term_id":1}</field>
+    </record>
+
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="context">{'default_is_company': True, 'res_partner_search_mode': 'customer'}</field>
+    </record>
+
+    <!-- <record id="res_partner_view_risk_inherit" model="ir.ui.view">
+        <field name="name">res.partner.view.risk</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account_financial_risk.res_partner_view_risk"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='financial_risk']" position="attributes">
+                <attribute name="groups">pronto.group_gestionar_riesgo_financiero</attribute>
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- # daba error en el upgrade 
+        lo cambie al final del archivo y funciono OK
+    -->
+    <record id="view_partner_property_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="product.view_partner_property_form"/>
+        <field name="arch" type="xml">
+
+            <field name="property_product_pricelist" position="attributes">
+                <attribute name="required">is_customer</attribute>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>

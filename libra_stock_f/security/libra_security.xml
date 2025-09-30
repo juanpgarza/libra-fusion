@@ -13,4 +13,19 @@
         <field name="category_id" ref="base.module_category_warehouse_management"/>
     </record>
 
+    <record id="group_stock_sale_user" model="res.groups">
+        <field name="name">Usuario vendedor</field>
+        <field name="category_id" ref="base.module_category_warehouse_management"/>
+    </record>
+
+    <!--        
+        esto define un grupo nuevo que permite hacer inventarios a los usuarios dentro del grupo.
+        ver archivo: ir.model.access.csv
+        El nivel "Usuario" del inventario no debe poder hacer ajustes
+    -->
+    <record id="group_stock_ajuste_de_inventario" model="res.groups">
+        <field name="name">Ajustes de inventario (Solo Carga)</field>
+        <field name="category_id" ref="base.module_category_warehouse_management"/>
+    </record>
+
 </odoo>

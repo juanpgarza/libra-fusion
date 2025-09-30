@@ -14,12 +14,16 @@
             "sale_management",
             "stock",
             "product",
+            "sale_margin",
         ],
     "data": [
             'security/libra_sale_security.xml',
+            'security/ir.model.access.csv',
             'views/sale_order_views.xml',
             'data/libra_data.xml',
-            'views/product_template_views.xml',            
+            'views/product_template_views.xml',
+            'views/res_partner_views.xml',
+            'views/sale_tipo_cliente_views.xml',
         ],
     "installable": True,
 }

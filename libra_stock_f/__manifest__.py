@@ -24,6 +24,7 @@
         'views/report_customer_delivery_views.xml',
         'security/ir.model.access.csv',
         'wizard/report_customer_delivery_wizard_views.xml',
+        'views/sale_order_views.xml',
         ],
     "installable": True,
 }

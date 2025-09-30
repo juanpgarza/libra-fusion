@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!-- Sin este permiso pronto.group_stock_sale_user, un usuario que es vendedor pero
+                 no tiene permisos en la App inventario, no puede navegar (no le muestra el boton
+                 a la orden de entrega
+                 -->
+                <xpath expr="//button[@name='action_view_delivery']" position="attributes">
+                    <attribute name="groups">stock.group_stock_user,libra_stock_f.group_stock_sale_user</attribute>
+                </xpath>
+           </field>
+        </record>
+    </data>
+</odoo>
