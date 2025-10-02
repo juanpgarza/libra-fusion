@@ -15,7 +15,8 @@
         "stock_picking_invoice_link", # OCA
         "sale_order_type", # OCA 
         "stock_voucher",
-        "stock_ux",       
+        "stock_ux",
+        "sale",       
         ],
     "data": [
         'security/libra_security.xml',
@@ -29,6 +30,7 @@
         'data/stock_data.xml',
         'views/stock_location_views.xml',
         'views/company.xml',
+        'views/stock_quant_views.xml',
         ],
     "installable": True,
 }
