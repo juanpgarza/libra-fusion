@@ -126,9 +126,13 @@ class ProductTemplate(models.Model):
                         if not proveedores:
                             mensaje_validacion += "- Proveedor \n"
                         else:
-                            proveedor = proveedores[0]
-                            if proveedor.price == 0:
-                                mensaje_validacion += "- el precio en el proveedor \n"
+                            # proveedor = proveedores[0]
+                            for proveedor in proveedores:
+                                if proveedor.price == 0:
+                                    mensaje_validacion += "- el precio en el proveedor \n"
+
+                                if not proveedor.product_code:
+                                    mensaje_validacion += "- el código en el proveedor \n"
 
                         if mensaje_validacion:
                             detalle_mensaje = mensaje_validacion
