@@ -102,3 +102,9 @@ class SaleOrder(models.Model):
             for line in order.order_line.filtered(lambda r: r.state != 'cancel'):
                 costo_total += line.purchase_price * line.product_uom_qty
             order.margin_percent = costo_total and order.margin/costo_total
+
+    def _get_tier_validation_readonly_domain(self):
+        # 
+        # tengo que sobre-escribir este metodo porque sino, cuando tiene validaciones aprobadas,
+        #  no me deja editar los campos por más que el pedido este desbloqueda
+        return "False"
