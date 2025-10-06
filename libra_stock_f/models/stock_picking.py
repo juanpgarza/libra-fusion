@@ -49,6 +49,8 @@ class StockPicking(models.Model):
                     if (inv.state == 'draft'):
                         raise ValidationError("Este movimiento tiene al menos una factura asociada en estado borrador.")
 
+        return result
+
     @api.model
     def _schedule_activity(self,activity_type_id):
 
