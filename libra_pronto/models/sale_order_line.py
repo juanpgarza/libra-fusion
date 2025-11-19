@@ -1,0 +1,22 @@
+from odoo import api, models, fields
+from odoo.exceptions import ValidationError
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    excluir_markup = fields.Boolean(string="Excluir del calculo del mark-up (Porcentaje) en los pedidos",
+                    compute='_computed_excluir_markup', 
+                    readonly=False, 
+                    store=True)
+
+    @api.depends('product_id','product_id.excluir_calculo_markup')
+    def _computed_excluir_markup(self):
+        for rec in self:
+            if rec.product_id.excluir_calculo_markup == 'siempre':                
+                rec.excluir_markup = True
+            elif rec.product_id.excluir_calculo_markup == 'componente_pack':
+                if rec.pack_parent_line_id:
+                    rec.excluir_markup = True
+            else:
+                rec.excluir_markup = False
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <field name="payment_term_id" position="before">
+                <field name="total_due" readonly='True' widget='monetary' decoration-danger="total_due &gt; 0" decoration-success="total_due &lt; 0" invisible="state in ['sale', 'done', 'cancel']"/>
+            </field>
+
+            <field name="user_id" position="attributes">
+                <attribute name="required">True</attribute>
+            </field>
+            
+            <xpath expr="//field[@name='show_update_fpos']" position="after">
+                <field name="cotizacion" readonly='True'/>
+            </xpath>
+
+            <!-- para que deje modificar el tipo de venta en el estado 'sale' -->
+            <xpath expr="//field[@name='type_id']" position="attributes">
+                <attribute name="force_save">1</attribute>
+                <attribute name="readonly">state in ["cancel"] or locked or False</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

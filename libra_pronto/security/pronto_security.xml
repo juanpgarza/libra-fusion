@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_no_exigir_campos_producto_vendible" model="res.groups">
+        <field name="name">NO exigir campos obligatorios para hacer producto vendible</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+
+    <record id="group_commitment_date_required" model="res.groups">
+        <field name="name">Fecha de compromiso obligatoria</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+
+    <record id="group_stock_omitir_bloqueo_pendiente_facturar" model="res.groups">
+        <field name="name">Omitir bloqueo de entrega por productos sin facturar</field>
+        <field name="category_id" ref="base.module_category_warehouse_management"/>
+    </record>
+
+    <!-- el modulo de adhoc tiene otro permiso, pero te oculta el boton
+      stock_ux.allow_picking_cancellation -->
+    <record id="group_cancel_picking" model="res.groups">
+        <field name="name">Permiso para cancelar movimiento de stock (entrega)</field>
+        <field name="category_id" ref="base.module_category_warehouse_management"/>
+    </record>
+
+    <record id="group_ventas_solo_lectura_pedidos" model="res.groups">
+        <field name="name">Ventas - Pedidos solo lectura (con chatter)</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+
+</odoo>
