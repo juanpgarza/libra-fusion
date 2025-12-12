@@ -20,3 +20,13 @@ class SaleOrderLine(models.Model):
             else:
                 rec.excluir_markup = False
 
+    # Hago esto porque no logro que traiga los descuentos que tiene el pack
+    # Tambien modifico el action_update_prices de sale.order
+    @api.model_create_multi
+    def create(self, values):
+        res = super(SaleOrderLine,self).create(values)
+        for line in res:
+            if line.pack_parent_line_id:
+                line.discount = line._get_pack_line_discount()
+                # import pdb; pdb.set_trace()
+        return res

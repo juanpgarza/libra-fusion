@@ -47,3 +47,13 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).write(values)
 
         return res
+    
+    # hay que hacer esto porque cuando se actualiza el precio
+    # se borran los descuentos de los productos del pack
+    def action_update_prices(self):
+        # import pdb; pdb.set_trace()
+        super(SaleOrder, self).action_update_prices()
+        for line in self.order_line:
+            if line.pack_parent_line_id:
+                line.discount = line._get_pack_line_discount()
+            
