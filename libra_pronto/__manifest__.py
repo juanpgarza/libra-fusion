@@ -16,6 +16,7 @@
             "sale_margin",
             "stock",
             "sale_product_pack",
+            "product",
         ],
     "data": [
             'views/product_template_views.xml',
