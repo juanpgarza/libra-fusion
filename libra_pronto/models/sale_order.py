@@ -56,4 +56,8 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if line.pack_parent_line_id:
                 line.discount = line._get_pack_line_discount()
-            
+
+    def _action_confirm(self):
+        super(SaleOrder, self)._action_confirm()
+        for picking in self.picking_ids:
+            self.env['procurement.group'].run_smart_scheduler(picking.id)            
