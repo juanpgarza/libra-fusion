@@ -4,4 +4,7 @@ from . import product_template
 from . import stock_picking
 from . import purchase_order
 from . import purchase_order_line
-from . import product_product
+from . import stock_location
+from . import stock_rule
+from . import company
+# from . import product_product

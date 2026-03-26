@@ -4,7 +4,7 @@
 {
     "name": "Libra Pronto",
     "summary": "",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.1",
     "category": "",
     "website": "https://github.com/juanpgarza/libra-fusion",
     "author": "juanpgarza",
@@ -24,7 +24,10 @@
             'views/sale_order_views.xml',
             'views/stock_picking_views.xml',
             'views/report_stockpicking_operations.xml',            
-            'views/purchase_order_views.xml',            
+            'views/purchase_order_views.xml',
+            'views/stock_location_views.xml',
+            'views/company.xml',
+            'data/product_stock_data.xml',                        
         ],
     "installable": True,
 }
