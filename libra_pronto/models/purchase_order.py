@@ -20,11 +20,11 @@ class PurchaseOrder(models.Model):
 
         return super(PurchaseOrder, self).button_confirm()
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        if not self.partner_id:
-            # para que borre el "Entregar a" por defecto
-            self.picking_type_id = False
+    # @api.onchange('partner_id')
+    # def _onchange_partner_id(self):
+    #     if not self.partner_id:
+    #         # para que borre el "Entregar a" por defecto
+    #         self.picking_type_id = False
 
     def write(self, values):
         # import pdb; pdb.set_trace()
