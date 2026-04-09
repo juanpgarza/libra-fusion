@@ -30,3 +30,8 @@ class SaleOrderLine(models.Model):
                 line.discount = line._get_pack_line_discount()
                 # import pdb; pdb.set_trace()
         return res
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if not self.order_id.sale_order_template_id:
+            raise ValidationError("Antes de informar los productos debe informar la plantilla")

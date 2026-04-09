@@ -18,6 +18,7 @@
             "sale_product_pack",
             "product",
             "sale_order_type",
+            "payment_mode_st",
         ],
     "data": [
             'views/product_template_views.xml',

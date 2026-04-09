@@ -34,8 +34,15 @@ class SaleOrder(models.Model):
 
     def write(self, values):
         for order in self:
+
+            if ('state' in values and order.state != 'done' and values['state'] == 'sale') or 'user_requesting_review' in values:
+                if not order.payment_mode_st_id:
+                            raise ValidationError(
+                                    'Debe informar el modo de pago'
+                                    )
+
             if self.env.user.has_group('libra_pronto.group_commitment_date_required'):
-                if ('state' in values and order.state != 'done' and values['state'] == 'sale'):
+                if ('state' in values and order.state != 'done' and values['state'] == 'sale') or 'user_requesting_review' in values:
                         if not order.commitment_date:
                             raise ValidationError(
                                     'Debe informar la fecha de compromiso'
