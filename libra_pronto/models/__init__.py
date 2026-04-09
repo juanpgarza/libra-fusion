@@ -8,4 +8,6 @@ from . import stock_location
 from . import stock_rule
 from . import company
 from . import res_partner
+from . import mail_message
+from . import account_payment
 # from . import product_product
