@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <field name="category_id" position="after">
+                <field name="tipo_cliente_id" />
+            </field>
+
+            <!-- NO FUNCIONA. me muestra el cartel antes de que pueda seleccionar la lista de precios!
+            <xpath expr="//field[@name='property_product_pricelist_ids']" position="attributes">
+                <attribute name="required">is_customer == True</attribute>
+            </xpath> -->
+
+        </field>
+    </record>
+
+</odoo>

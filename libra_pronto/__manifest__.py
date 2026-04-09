@@ -17,6 +17,7 @@
             "stock",
             "sale_product_pack",
             "product",
+            "sale_order_type",
         ],
     "data": [
             'views/product_template_views.xml',
@@ -27,7 +28,9 @@
             'views/purchase_order_views.xml',
             'views/stock_location_views.xml',
             'views/company.xml',
-            'data/product_stock_data.xml',                        
+            'data/product_stock_data.xml',
+            'views/res_partner_views.xml',
+            'security/ir.model.access.csv',
         ],
     "installable": True,
 }

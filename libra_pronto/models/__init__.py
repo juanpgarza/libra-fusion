@@ -7,4 +7,5 @@ from . import purchase_order_line
 from . import stock_location
 from . import stock_rule
 from . import company
+from . import res_partner
 # from . import product_product
