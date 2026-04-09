@@ -72,8 +72,8 @@ class ProductTemplate(models.Model):
                         mensaje_validacion += "- imagen del producto \n"
                     if not val.get('seller_ids'):
                         mensaje_validacion += "- Proveedor \n"
-                    if not val.get('route_ids'):
-                        mensaje_validacion += "- Rutas \n"
+                    # if not val.get('route_ids'):
+                    #     mensaje_validacion += "- Rutas \n"
 
                 if mensaje_validacion:
                     raise ValidationError(
@@ -126,8 +126,8 @@ class ProductTemplate(models.Model):
                             if proveedor.price == 0:
                                 mensaje_validacion += "- el precio en el proveedor \n"
 
-                        if not rec.route_ids:
-                            mensaje_validacion += "- Rutas \n"
+                        # if not rec.route_ids:
+                        #     mensaje_validacion += "- Rutas \n"
 
                         if mensaje_validacion:
                             detalle_mensaje = mensaje_validacion
