@@ -1,0 +1,44 @@
+<odoo>
+    <!-- Vista del wizard -->
+    <record id="view_report_customer_delivery_wizard_form" model="ir.ui.view">
+        <field name="name">report.customer.delivery.wizard.form</field>
+        <field name="model">report.customer.delivery.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generar Reporte de Entregas a Clientes">
+                <!-- Agregamos un grupo o sheet para dar estructura -->
+                <sheet>
+                    <group>
+                        <p class="oe_grey">
+                            Presione "Generar Reporte" para descargar el análisis de entregas por ubicación.
+                        </p>
+                        <!-- Aquí irían tus campos, ej: <field name="date_from"/> -->
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="generate_report" type="object" string="Generar Reporte" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción para abrir el wizard -->
+    <record id="action_report_customer_delivery_wizard" model="ir.actions.act_window">
+        <field name="name">Entregas a cliente por ubicación</field>
+        <field name="res_model">report.customer.delivery.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menús -->
+    <menuitem id="menu_inventory_report_root" 
+              name="Reportes Pronto" 
+              parent="stock.menu_warehouse_report"
+              sequence="200"/>
+
+    <menuitem id="menu_report_customer_delivery_wizard"
+              name="Entregas a cliente por ubicación"
+              parent="menu_inventory_report_root"
+              action="action_report_customer_delivery_wizard"
+              sequence="10"/>
+</odoo>
