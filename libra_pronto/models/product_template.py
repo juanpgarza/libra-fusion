@@ -18,6 +18,13 @@ class ProductTemplate(models.Model):
                         default='nunca',
                         string='Excluir del cálculo del markup')
 
+    meses_de_stock = fields.Float("Meses de stock", compute="_compute_meses_de_stock", store=True)
+
+    @api.depends('sales_count', 'virtual_available')
+    def _compute_meses_de_stock(self):
+        for rec in self:
+            rec.meses_de_stock = rec.sales_count and rec.virtual_available / rec.sales_count * 12
+
     @api.model
     def default_get(self, fields):
         rec = super(ProductTemplate, self).default_get(fields)
