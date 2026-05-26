@@ -34,7 +34,8 @@
             'views/res_partner_views.xml',
             'security/ir.model.access.csv',
             'views/report_customer_delivery_views.xml',            
-            'wizard/report_customer_delivery_wizard_views.xml'
+            'wizard/report_customer_delivery_wizard_views.xml',
+            'views/account_payment_views.xml',
         ],
     "installable": True,
 }
