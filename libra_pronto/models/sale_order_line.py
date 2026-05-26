@@ -9,6 +9,13 @@ class SaleOrderLine(models.Model):
                     readonly=False, 
                     store=True)
 
+    precio_unitario_con_descuento = fields.Float('Precio unitario con descuento', compute="_compute_precio_unitario_con_descuento")
+    
+    @api.depends('product_id', 'price_unit', 'discount')
+    def _compute_precio_unitario_con_descuento(self):
+        for line in self:
+            line.precio_unitario_con_descuento = line.price_unit * (1 - (line.discount/100))
+
     @api.depends('product_id','product_id.excluir_calculo_markup')
     def _computed_excluir_markup(self):
         for rec in self:
