@@ -19,6 +19,7 @@
             "product",
             "sale_order_type",
             "payment_mode_st",
+            "stock_voucher",
         ],
     "data": [
             'views/product_template_views.xml',
