@@ -21,53 +21,29 @@ class ResPartner(models.Model):
         inverse="_inverse_product_pricelist", company_dependent=False, store=True,
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
-    @api.model_create_multi
-    def create(self, values):
-
-        for val in values:
+    @api.constrains('mobile', 'email', 'tipo_cliente_id', 'is_customer')
+    def _check_required_fields(self):
+        for rec in self:
             mensaje_validacion = ""
-            if not val.get('mobile'):
-                mensaje_validacion += "- Debe informar el Nro. de móvil  \n"
+            
+            if not rec.mobile:
+                mensaje_validacion += _("- Debe informar el Nro. de móvil.\n")
+            
+            if not rec.email:
+                mensaje_validacion += _("- Debe informar el correo electrónico.\n")
 
-            if not val.get('email'):
-                mensaje_validacion += "- Debe informar el correo electrónico \n"
-
-            if not val.get('tipo_cliente_id') and val.get('is_customer'):
-                mensaje_validacion += "- Debe informar el tipo de cliente \n"
-
-            # if not val.get('property_product_pricelist_ids') and val.get('is_customer'):
-            #     mensaje_validacion += "- Debe informar la lista de precios \n"
+            # Nota: Asegúrate de que 'is_customer' exista en tu modelo, 
+            # ya que en Odoo estándar esa variable cambió en versiones recientes.
+            if rec.is_customer and not rec.tipo_cliente_id:
+                mensaje_validacion += _("- Debe informar el tipo de cliente.\n")
 
             if mensaje_validacion:
-                    raise ValidationError(
-                        "Debe completar los siguientes campos: \n\n" + mensaje_validacion
-                    )
-
-        res = super(ResPartner, self).create(values)
-        return res
-
+                raise ValidationError(
+                    _("Debe completar los siguientes campos:\n\n%s") % mensaje_validacion
+                )
 
     def write(self, values):
         super(ResPartner,self).write(values)
-
-        for rec in self:
-            mensaje_validacion = ""
-            if not rec.mobile:
-                mensaje_validacion += "- Debe informar el Nro. de móvil  \n"
-            
-            if not rec.email:
-                mensaje_validacion += "- Debe informar el correo electrónico  \n"
-
-            if not rec.tipo_cliente_id and rec.is_customer:
-                mensaje_validacion += "- Debe informar el tipo de cliente \n"
-
-            # if not rec.property_product_pricelist_ids and rec.is_customer:
-            #     mensaje_validacion += "- Debe informar la lista de precios \n"            
-
-            if mensaje_validacion:
-                    raise ValidationError(
-                        "Debe completar los siguientes campos: \n\n" + mensaje_validacion
-                    )
 
         if 'sale_type' in values:
             if not self.env.user.has_group('pronto.group_ventas_cambiar_tipo_venta_contacto'):

@@ -31,7 +31,6 @@ class SaleOrder(models.Model):
                 costo_total += line.purchase_price * line.product_uom_qty
             order.margin_percent = costo_total and order.margin/costo_total
 
-
     def write(self, values):
         for order in self:
 
@@ -77,3 +76,27 @@ class SaleOrder(models.Model):
                 group_id = self.env.ref(group)
                 raise ValidationError("Opción habilitada solo para los miembros del grupo: \n\n'{} / {}'".format(group_id.sudo().category_id.name,group_id.name))
         return super(SaleOrder, self).action_cancel()
+
+    def _get_tier_validation_readonly_domain(self):
+        # 
+        # tengo que sobre-escribir este metodo porque sino, cuando tiene validaciones aprobadas,
+        #  no me deja editar los campos por más que el pedido este desbloqueda
+        return "False"
+
+    @api.model
+    def default_get(self, fields):
+        rec = super(SaleOrder, self).default_get(fields)
+        # import pdb; pdb.set_trace()
+        rec['sale_order_template_id'] = False
+
+        return rec
+
+    @api.onchange('partner_id')
+    def _compute_user_id(self):
+    #     # Tarea #974
+    #     # Se anula la funcion que hace que tome el comercial asignado al cliente
+    #     # Lo informan a mano         
+        res = super(SaleOrder, self)._compute_user_id()
+        for rec in self:
+            rec.user_id = self.env.user        
+        return res
