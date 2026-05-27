@@ -45,9 +45,9 @@ class ResPartner(models.Model):
     def write(self, values):
         super(ResPartner,self).write(values)
 
-        if 'sale_type' in values:
-            if not self.env.user.has_group('pronto.group_ventas_cambiar_tipo_venta_contacto'):
-                create_from_website = self._context.get('create_from_website', False)
-                if not create_from_website:
-                    raise ValidationError("Su usuario no posee permisos para modificar el tipo de venta")
+        # if 'sale_type' in values:
+        #     if not self.env.user.has_group('pronto.group_ventas_cambiar_tipo_venta_contacto'):
+        #         create_from_website = self._context.get('create_from_website', False)
+        #         if not create_from_website:
+        #             raise ValidationError("Su usuario no posee permisos para modificar el tipo de venta")
    
