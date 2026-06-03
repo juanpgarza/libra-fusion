@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cost_history_tree" model="ir.ui.view">
+        <field name="name">product.replenishment.cost.history.list</field>
+        <field name="model">product.replenishment.cost.history</field>
+        <field name="arch" type="xml">
+            <list string="Historial de Costos" create="false" edit="false" delete="false">
+                <field name="date"/>
+                <field name="product_tmpl_id"/>
+                <field name="old_cost" widget="monetary"/>
+                <field name="new_cost" widget="monetary"/>
+                <field name="currency_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_product_replenishment_cost_history" model="ir.actions.act_window">
+        <field name="name">Historial de Costos</field>
+        <field name="res_model">product.replenishment.cost.history</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_cost_history_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay registros en el historial de costos.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_product_replenishment_cost_history"
+              name="Historial de Costos"
+              action="action_product_replenishment_cost_history"
+              parent="purchase.purchase_report_main"
+              sequence="50"/>
+
+</odoo>
