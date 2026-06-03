@@ -8,8 +8,9 @@
                 <field name="date"/>
                 <field name="product_tmpl_id"/>
                 <field name="old_cost" widget="monetary"/>
+                <field name="old_currency_id"/>
                 <field name="new_cost" widget="monetary"/>
-                <field name="currency_id"/>
+                <field name="new_currency_id"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
             </list>
         </field>

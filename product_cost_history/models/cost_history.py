@@ -17,12 +17,16 @@ class ProductReplenishmentCostHistory(models.Model):
         default=lambda self: self.env.user, 
         required=True
     )
-    old_cost = fields.Monetary(string='Costo Anterior', currency_field='currency_id')
-    new_cost = fields.Monetary(string='Costo Nuevo', currency_field='currency_id')
-    currency_id = fields.Many2one(
+    old_cost = fields.Monetary(string='Costo Anterior', currency_field='old_currency_id')
+    new_cost = fields.Monetary(string='Costo Nuevo', currency_field='new_currency_id')
+    old_currency_id = fields.Many2one(
         'res.currency', 
-        string='Moneda', 
-        related='product_tmpl_id.currency_id', 
+        string='Moneda anterior',         
+        store=True
+    )
+    new_currency_id = fields.Many2one(
+        'res.currency', 
+        string='Moneda nueva',
         store=True
     )
     date = fields.Datetime(
