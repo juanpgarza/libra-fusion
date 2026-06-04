@@ -42,3 +42,18 @@ class SaleOrderLine(models.Model):
     def onchange_product_id(self):
         if not self.order_id.sale_order_template_id:
             raise ValidationError("Antes de informar los productos debe informar la plantilla")
+
+    def _get_sale_order_line_multiline_description_sale(self):
+        """
+        Sobreescribimos el método de sale.order.line para evitar que concatenar
+        el nombre/código del producto, mostrando SOLO la descripción de venta.
+        """
+        self.ensure_one()
+        # import pdb;pdb.set_trace()    
+        # Si el producto tiene descripción de venta, usamos esa.
+        if self.product_id.description_sale:
+            return self.product_id.description_sale
+        
+        # Si no tiene descripción de venta, usamos el comportamiento nativo 
+        # (para que no quede la línea completamente en blanco)
+        return super(SaleOrderLine, self)._get_sale_order_line_multiline_description_sale()
