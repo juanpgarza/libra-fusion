@@ -69,6 +69,8 @@ class ProductTemplate(models.Model):
                         mensaje_validacion += "- Impuestos cliente \n"
                     if not val.get('supplier_taxes_id'):
                         mensaje_validacion += "- Impuestos de proveedor \n"
+                    if not val.get('description_sale'):
+                        mensaje_validacion += "- Descripción de la cotización \n"
                     if not val.get('sale_additional_description'):
                         mensaje_validacion += "- Descripción adicional - ecommerce \n"
                     if val.get('weight') == 0:
@@ -116,6 +118,8 @@ class ProductTemplate(models.Model):
                             mensaje_validacion += "- Impuestos de cliente \n"
                         if not rec.supplier_taxes_id:
                             mensaje_validacion += "- Impuestos de proveedor \n"
+                        if not rec.description_sale:
+                            mensaje_validacion += "- Descripción de la cotización \n"
                         if not rec.sale_additional_description:
                             mensaje_validacion += "- Descripción adicional - ecommerce \n"
                         if rec.weight == 0:
