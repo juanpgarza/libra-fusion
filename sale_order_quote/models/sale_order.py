@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     def write(self, values): 
         super(SaleOrder,self).write(values)
 
-        if self.state in ('draft','sent','sale'):
+        if self.state in ('draft','sent'):
             self.sale_order_quote_log_ids.filtered(lambda x: x.log_type in ('validez', 'precio')).unlink()
 
             for line in self.order_line.filtered(lambda x: not x.display_type):
