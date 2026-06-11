@@ -1,81 +1,111 @@
-##############################################################################
-# For copyright and license notices, see __manifest__.py file in module root
-# directory
-##############################################################################
-from odoo import _, api, fields, models
+from odoo import models, fields, api
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    sale_order_quote_log_ids = fields.One2many('sale.order.quote.log','sale_order_id',string="Logs del pedido", copy=False)
+    sale_order_quote_log_ids = fields.One2many(
+        'sale.order.quote.log', 
+        'sale_order_id', 
+        string="Logs del pedido", 
+        copy=False
+    )
 
     def write(self, values):     
-        super(SaleOrder,self).write(values)
+        # 1. Ejecutar el write original primero y guardar el resultado
+        res = super().write(values)
         
-        if self.state in ('draft','sent','sale'):
-            self.sale_order_quote_log_ids.filtered(lambda x: x.log_type in ('validez', 'precio')).unlink()
+        # 2. Iterar por cada registro para evitar errores de singleton
+        for order in self:
+            if order.state in ('draft', 'sent', 'sale'):
+                # Limpiar logs anteriores de validez y precio de este pedido específico
+                order.sale_order_quote_log_ids.filtered(
+                    lambda x: x.log_type in ('validez', 'precio')
+                ).unlink()
 
-            delta = self.validity_date - fields.Date.context_today(self)
+                # Controlar si la fecha de validez existe y está vencida
+                if order.validity_date:
+                    delta = order.validity_date - fields.Date.context_today(order)
+                    if delta.days < 0:
+                        self.env['sale.order.quote.log'].registrar_log(
+                            order, 
+                            f"Fecha de validez vencida: {order.validity_date}", 
+                            'validez'
+                        )
 
-            if delta.days < 0:
-                self.env['sale.order.quote.log'].registrar_log(self, "Fecha de validez vencida: {}".format(self.validity_date),'validez')
+                # Evaluar las líneas del pedido
+                for line in order.order_line.filtered(lambda x: not x.display_type):
+                    if not line.product_id.registrar_novedad_presupuesto:
+                        continue
 
-            for line in self.order_line.filtered(lambda x: not x.display_type):
-                if line.product_id.registrar_novedad_presupuesto:
-                    # novedad: descuento en componente de pack
+                    # --- NOVEDAD: Descuento en componente de Pack ---
                     if line.pack_parent_line_id:
-                        # es un componente de un pack
-                        descuento_predefinido = line.pack_parent_line_id.product_id.pack_line_ids.filtered(lambda x: x.product_id.id == line.product_id.id).sale_discount 
+                        # Evitar búsquedas en bucle: usamos filter sobre el pack del producto padre
+                        pack_line = line.pack_parent_line_id.product_id.pack_line_ids.filtered(
+                            lambda x: x.product_id == line.product_id
+                        )
+                        descuento_predefinido = pack_line.sale_discount if pack_line else 0.0
                         descuento_modificado = line.discount
 
                         if descuento_modificado > descuento_predefinido:                
-                            self.env['sale.order.quote.log'].registrar_log(self,
-                                "Descuento predefinido: {} - Descuento modificado: {}".format(
-                                    descuento_predefinido,
-                                    descuento_modificado),'descuento_componente_pack', line, line.product_id)
+                            self.env['sale.order.quote.log'].registrar_log(
+                                order,
+                                f"Descuento predefinido: {descuento_predefinido} - Descuento modificado: {descuento_modificado}",
+                                'descuento_componente_pack', 
+                                line, 
+                                line.product_id
+                            )
 
-                    if line.pack_parent_line_id and line.pack_parent_line_id.pack_type == 'detailed' and line.pack_parent_line_id.pack_component_price == 'totalized':
-                        # el precio de los componentes están siempre en cero. No se controla la novedad de precios.
+                    # Ignorar control de precio si el pack es detallado pero totalizado en precio
+                    if (line.pack_parent_line_id and 
+                            line.pack_parent_line_id.pack_type == 'detailed' and 
+                            line.pack_parent_line_id.pack_component_price == 'totalized'):
                         continue
 
-                    # copiado desde: product_uom_change (addons/sale)
-                    if line.order_id.pricelist_id and line.order_id.partner_id:                        
+                    # --- NOVEDAD: Control de Precios (Tarifa / Pricelist) ---
+                    if order.pricelist_id and order.partner_id:                        
                         product = line.product_id.with_context(
-                            lang=line.order_id.partner_id.lang,
-                            partner=line.order_id.partner_id,
+                            lang=order.partner_id.lang,
+                            partner=order.partner_id,
                             quantity=line.product_uom_qty,
-                            # date=line.order_id.date_order,
                             date=fields.Datetime.now(),
-                            pricelist=line.order_id.pricelist_id.id,
+                            pricelist=order.pricelist_id.id,
                             uom=line.product_uom.id,
-                            fiscal_position=line.env.context.get('fiscal_position')
+                            fiscal_position=self.env.context.get('fiscal_position')
                         )
 
+                        # Simulación de cálculo de precio según el módulo OCA product_pack
                         if line.product_id.pack_ok and line.product_id.pack_component_price == 'totalized':
-                            # addons-OCA/product-pack/product_pack/models/product_product.py:33
-                            prices = product.price_compute(price_type='non_detailed',currency=line.order_id.pricelist_id.currency_id)
-                            precio_unitario_actual = round(prices[line.product_id.id],2)
-                            # import pdb; pdb.set_trace()
-                        else:              
-                            precio_unitario_actual = round(self.env['account.tax']._fix_tax_included_price_company(line._get_display_price(), product.taxes_id, line.tax_id, line.company_id),2)
+                            prices = product.price_compute(
+                                price_type='non_detailed', 
+                                currency=order.pricelist_id.currency_id
+                            )
+                            precio_unitario_actual = round(prices.get(line.product_id.id, 0.0), 2)
+                        else:
+                            # Odoo 18 nativo: _get_display_price ya procesa la tarifa.
+                            # Para impuestos incluidos/excluidos de forma segura en Odoo 18:
+                            precio_base = line._get_display_price()
+                            
+                            # Ajuste de impuestos según la posición fiscal y la compañía
+                            taxes = line.tax_id.compute_all(
+                                precio_base, 
+                                currency=order.currency_id, 
+                                quantity=1.0, 
+                                product=line.product_id, 
+                                partner=order.partner_id
+                            )
+                            # Dependiendo de si comparas contra price_unit (que suele ser sin impuestos devueltos),
+                            # usamos 'total_excluded'. Si necesitas con impuestos, usa 'total_included'.
+                            precio_unitario_actual = round(taxes['total_excluded'], 2)
 
-                        # precio_unitario_actual = round(product._get_tax_included_unit_price(
-                        #     line.company_id or line.order_id.company_id,
-                        #     line.order_id.currency_id,
-                        #     line.order_id.date_order,
-                        #     'sale',
-                        #     fiscal_position=line.order_id.fiscal_position_id,
-                        #     product_price_unit=line._get_display_price(product),
-                        #     product_currency=line.order_id.currency_id
-                        # ))
-
-                        precio_unitario = round(line.price_unit,2)
+                        precio_unitario = round(line.price_unit, 2)
 
                         if precio_unitario != precio_unitario_actual:                
-                            self.env['sale.order.quote.log'].registrar_log(self,
-                                "Precio anterior: {} - Precio nuevo: {}".format(
-                                    precio_unitario,
-                                    precio_unitario_actual),'precio', line, product)                    
-
-                    
-        return
+                            self.env['sale.order.quote.log'].registrar_log(
+                                order,
+                                f"Precio anterior: {precio_unitario} - Precio nuevo: {precio_unitario_actual}",
+                                'precio', 
+                                line, 
+                                product
+                            )                    
+        
+        return res
