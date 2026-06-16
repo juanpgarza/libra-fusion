@@ -108,9 +108,9 @@ class ProductTemplate(models.Model):
                 for rec in self:
                     mensaje_validacion = ""
                     if rec.sale_ok and rec.type == 'consu':
-                        if not rec.default_code:
+                        if not rec.default_code and rec.product_variant_count == 0:
                             raise UserError("Debe informar el campo referencia")
-                        if not rec.barcode:
+                        if not rec.barcode and rec.product_variant_count == 0:
                             mensaje_validacion += "- codigo de barras \n"
                         if not rec.excluir_calculo_markup:
                             mensaje_validacion += "- Excluir del cálculo del markup \n"
@@ -122,11 +122,11 @@ class ProductTemplate(models.Model):
                             mensaje_validacion += "- Descripción de la cotización \n"
                         if not rec.sale_additional_description:
                             mensaje_validacion += "- Descripción adicional - ecommerce \n"
-                        if rec.weight == 0:
+                        if rec.weight == 0 and rec.product_variant_count == 0:
                             mensaje_validacion += "- Peso \n"
-                        if rec.volume == 0:
+                        if rec.volume == 0  and rec.product_variant_count == 0:
                             mensaje_validacion += "- Volumen \n"
-                        if not rec.image_1920:
+                        if not rec.image_1920 and rec.product_variant_count == 0:
                             mensaje_validacion += "- imagen del producto \n"
 
                         proveedores = rec.seller_ids
