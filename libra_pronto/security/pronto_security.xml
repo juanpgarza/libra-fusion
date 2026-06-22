@@ -58,4 +58,9 @@
         <field name="category_id" ref="base.module_category_sales_management"/>
     </record>
 
+    <record id="group_no_exigir_campos_requeridos" model="res.groups">
+        <field name="name">No exigir campos requeridos de clientes</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+
 </odoo>

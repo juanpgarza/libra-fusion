@@ -23,24 +23,25 @@ class ResPartner(models.Model):
 
     @api.constrains('mobile', 'email', 'tipo_cliente_id', 'is_customer')
     def _check_required_fields(self):
-        for rec in self:
-            mensaje_validacion = ""
-            
-            if not rec.mobile:
-                mensaje_validacion += _("- Debe informar el Nro. de móvil.\n")
-            
-            if not rec.email:
-                mensaje_validacion += _("- Debe informar el correo electrónico.\n")
+        if not self.env.user.has_group('libra_pronto.group_no_exigir_campos_requeridos'):
+            for rec in self:
+                mensaje_validacion = ""
+                
+                if not rec.mobile:
+                    mensaje_validacion += _("- Debe informar el Nro. de móvil.\n")
+                
+                if not rec.email:
+                    mensaje_validacion += _("- Debe informar el correo electrónico.\n")
 
-            # Nota: Asegúrate de que 'is_customer' exista en tu modelo, 
-            # ya que en Odoo estándar esa variable cambió en versiones recientes.
-            if rec.is_customer and not rec.tipo_cliente_id:
-                mensaje_validacion += _("- Debe informar el tipo de cliente.\n")
+                # Nota: Asegúrate de que 'is_customer' exista en tu modelo, 
+                # ya que en Odoo estándar esa variable cambió en versiones recientes.
+                if rec.is_customer and not rec.tipo_cliente_id:
+                    mensaje_validacion += _("- Debe informar el tipo de cliente.\n")
 
-            if mensaje_validacion:
-                raise ValidationError(
-                    _("Debe completar los siguientes campos:\n\n%s") % mensaje_validacion
-                )
+                if mensaje_validacion:
+                    raise ValidationError(
+                        _("Debe completar los siguientes campos:\n\n%s") % mensaje_validacion
+                    )
 
     def write(self, values):
         super(ResPartner,self).write(values)
