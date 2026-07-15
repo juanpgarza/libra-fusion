@@ -19,6 +19,12 @@
             <field name="summary">Reconfirmar retiro</field>
         </record>
 
+        <record id="diario_de_cambios"
+                    model="ir.config_parameter" forcecreate="True">
+                <field name="key">libra_pronto.diario_de_cambios</field>
+                <field name="value">101</field>
+        </record>
+
     </data>
 
 </odoo>
