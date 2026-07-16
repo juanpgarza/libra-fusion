@@ -21,6 +21,7 @@
             "payment_mode_st",
             "stock_voucher",
             "sale_order_mass_product_exchange",
+            "sale_crm",
         ],
     "data": [
             'views/product_template_views.xml',
