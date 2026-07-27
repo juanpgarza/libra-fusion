@@ -12,4 +12,4 @@ class CrmQuotationPartner(models.TransientModel):
 
         res = super(CrmQuotationPartner, self).action_apply()
 
-        return  
+        return res 
