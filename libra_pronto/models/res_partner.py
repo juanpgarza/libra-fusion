@@ -21,7 +21,7 @@ class ResPartner(models.Model):
         inverse="_inverse_product_pricelist", company_dependent=False, store=True,
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
-    @api.constrains('mobile', 'email', 'tipo_cliente_id', 'is_customer')
+    @api.constrains('mobile', 'email', 'tipo_cliente_id', 'is_customer', 'sale_type')
     def _check_required_fields(self):
         if not self.env.user.has_group('libra_pronto.group_no_exigir_campos_requeridos'):
             for rec in self:
@@ -37,6 +37,9 @@ class ResPartner(models.Model):
                 # ya que en Odoo estándar esa variable cambió en versiones recientes.
                 if rec.is_customer and not rec.tipo_cliente_id:
                     mensaje_validacion += _("- Debe informar el tipo de cliente.\n")
+                
+                if not rec.sale_type:
+                    mensaje_validacion += _("- Debe informar el tipo de pedido de venta.\n")
 
                 if mensaje_validacion:
                     raise ValidationError(
