@@ -13,3 +13,4 @@ from . import account_payment
 # from . import product_product
 from . import report_customer_delivery
 from . import account_move
+from . import product_pricelist_item
