@@ -133,9 +133,11 @@ class ProductTemplate(models.Model):
                         if not proveedores:
                             mensaje_validacion += "- Proveedor \n"
                         else:
-                            proveedor = proveedores[0]
-                            if proveedor.price == 0:
-                                mensaje_validacion += "- el precio en el proveedor \n"
+                            for s in proveedores:
+                                if not s.product_code:  
+                                    mensaje_validacion += "- el código en el proveedor \n"                                                                      
+                                if s.price == 0:
+                                    mensaje_validacion += "- el precio en el proveedor \n"
 
                         # if not rec.route_ids:
                         #     mensaje_validacion += "- Rutas \n"
