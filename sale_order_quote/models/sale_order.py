@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
         if self.state in ('draft','sent'):
             self.sale_order_quote_log_ids.filtered(lambda x: x.log_type in ('validez', 'precio')).unlink()
 
-            for line in self.order_line.filtered(lambda x: not x.display_type):
+            for line in self.order_line.filtered(lambda x: not x.display_type and x.product_id.type == 'consu'):
                 if line.product_id.registrar_novedad_presupuesto:
 
                     # copiado desde: product_uom_change (addons/sale)
@@ -42,7 +42,9 @@ class SaleOrder(models.Model):
 
                         precio_unitario = round(line.price_unit,2)
                         
-                        if precio_unitario != precio_unitario_actual:                
+                        tolerancia = 5
+                        # import pdb; pdb.set_trace()
+                        if abs(precio_unitario - precio_unitario_actual) > tolerancia:
                             self.env['sale.order.quote.log'].registrar_log(self,
                                 "Precio presupuesto: {} - Precio actualizado: {}".format(
                                     precio_unitario,
