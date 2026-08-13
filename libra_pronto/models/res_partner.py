@@ -21,10 +21,15 @@ class ResPartner(models.Model):
         inverse="_inverse_product_pricelist", company_dependent=False, store=True,
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
-    @api.constrains('mobile', 'email', 'tipo_cliente_id', 'is_customer', 'sale_type')
+    @api.constrains('mobile', 'email', 'tipo_cliente_id', 'is_customer', 'sale_type', 'parent_id')
     def _check_required_fields(self):
         if not self.env.user.has_group('libra_pronto.group_no_exigir_campos_requeridos'):
             for rec in self:
+
+                # 1. Ignorar si es un contacto dependiente o dirección de entrega/facturación
+                if rec.parent_id:
+                    continue
+
                 mensaje_validacion = ""
                 
                 if not rec.mobile:
