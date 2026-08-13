@@ -102,3 +102,12 @@ class SaleOrder(models.Model):
                                 )
 
         rec = super(SaleOrder, self).request_validation()
+
+    def action_add_from_catalog(self):
+            self.ensure_one()
+            
+            # Validación antes de llamar a super()
+            if not self.sale_order_template_id:
+                raise ValidationError(_("Antes de informar los productos debe informar la plantilla."))
+                
+            return super().action_add_from_catalog()
