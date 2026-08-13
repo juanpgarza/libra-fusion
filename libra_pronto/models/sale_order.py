@@ -2,7 +2,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _name = "sale.order"
+    _inherit = ['sale.order', 'tier.validation']
 
     total_due = fields.Monetary(
         related='partner_id.total_due',
@@ -33,19 +34,6 @@ class SaleOrder(models.Model):
 
     def write(self, values):
         for order in self:
-
-            if ('state' in values and order.state != 'done' and values['state'] == 'sale') or 'user_requesting_review' in values:
-                if not order.payment_mode_st_id:
-                            raise ValidationError(
-                                    'Debe informar el modo de pago'
-                                    )
-
-            if self.env.user.has_group('libra_pronto.group_commitment_date_required'):
-                if ('state' in values and order.state != 'done' and values['state'] == 'sale') or 'user_requesting_review' in values:
-                        if not order.commitment_date:
-                            raise ValidationError(
-                                    'Debe informar la fecha de compromiso'
-                                    )
 
             if self.env.user.has_group('libra_pronto.group_ventas_solo_lectura_pedidos'):
                 raise ValidationError("Su usuario solo está habilitado para escribir en el chatter ")
@@ -100,3 +88,17 @@ class SaleOrder(models.Model):
         for rec in self:
             rec.user_id = self.env.user        
         return res
+    
+    def request_validation(self):
+        if not self.payment_mode_st_id:
+            raise ValidationError(
+                    'Debe informar el modo de pago'
+                    )
+
+        if self.env.user.has_group('libra_pronto.group_commitment_date_required'):
+            if not self.commitment_date:
+                raise ValidationError(
+                                'Debe informar la fecha de compromiso'
+                                )
+
+        rec = super(SaleOrder, self).request_validation()
