@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
                                 'Debe informar la fecha de compromiso'
                                 )
 
-        rec = super(SaleOrder, self).request_validation()
+        return super(SaleOrder, self).request_validation()
 
     def action_add_from_catalog(self):
             self.ensure_one()
