@@ -51,10 +51,10 @@ class SaleOrder(models.Model):
                             precio_unitario_actual = round(self.env['account.tax']._fix_tax_included_price_company(line._get_display_price(), product.taxes_id, line.tax_id, line.company_id),2)
 
                         precio_unitario = round(line.price_unit,2)
-                        # import pdb; pdb.set_trace()
-                        porcentaje_tolerancia = 10
+                        
+                        porcentaje_tolerancia = 1
                         if not self.esta_en_tolerancia(precio_unitario,precio_unitario_actual,porcentaje_tolerancia):
-                            # import pdb; pdb.set_trace()
+                            
                             self.env['sale.order.quote.log'].registrar_log(self,
                                 "Precio presupuesto: {} - Precio actualizado: {}".format(
                                     precio_unitario,
