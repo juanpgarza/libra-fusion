@@ -9,6 +9,16 @@ class SaleOrder(models.Model):
 
     sale_order_quote_log_ids = fields.One2many('sale.order.quote.log','sale_order_id',string="Logs del pedido", copy=False)
 
+    @api.model
+    def esta_en_tolerancia(self, x, objetivo, porcentaje_tolerancia):
+        margen = abs(objetivo) * (porcentaje_tolerancia / 100)
+        # import pdb; pdb.set_trace()
+        return abs(x - objetivo) <= margen
+
+        # Ejemplo: verificar si 105 está dentro del 5% de tolerancia de 100
+        # print(esta_en_tolerancia(105, 100, 5))  # True (Rango permitido: 95 a 105)
+        # print(esta_en_tolerancia(106, 100, 5))  # False
+
     def write(self, values): 
         super(SaleOrder,self).write(values)
 
@@ -41,10 +51,10 @@ class SaleOrder(models.Model):
                             precio_unitario_actual = round(self.env['account.tax']._fix_tax_included_price_company(line._get_display_price(), product.taxes_id, line.tax_id, line.company_id),2)
 
                         precio_unitario = round(line.price_unit,2)
-                        
-                        tolerancia = 5
                         # import pdb; pdb.set_trace()
-                        if abs(precio_unitario - precio_unitario_actual) > tolerancia:
+                        porcentaje_tolerancia = 10
+                        if not self.esta_en_tolerancia(precio_unitario,precio_unitario_actual,porcentaje_tolerancia):
+                            # import pdb; pdb.set_trace()
                             self.env['sale.order.quote.log'].registrar_log(self,
                                 "Precio presupuesto: {} - Precio actualizado: {}".format(
                                     precio_unitario,
