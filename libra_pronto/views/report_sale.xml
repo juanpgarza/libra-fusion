@@ -1,0 +1,10 @@
+<odoo>
+    <template id="report_saleorder_hide_packaging"
+              inherit_id="sale.report_saleorder_document">
+
+        <xpath expr="//span[@t-if='line.product_packaging_id']"
+               position="replace">
+        </xpath>
+
+    </template>
+</odoo>

@@ -39,6 +39,9 @@
             'views/report_customer_delivery_views.xml',            
             'wizard/report_customer_delivery_wizard_views.xml',
             'views/account_payment_views.xml',
+            'views/report_sale.xml',
         ],
     "installable": True,
+    ],
+    },
 }
