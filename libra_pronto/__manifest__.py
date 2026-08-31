@@ -42,6 +42,4 @@
             'views/report_sale.xml',
         ],
     "installable": True,
-    ],
-    },
 }
